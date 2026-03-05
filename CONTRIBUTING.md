@@ -369,7 +369,7 @@ git push origin --delete feature/your-feature-name
 **Data Quality**
 - Implement data validation rules
 - Add anomaly detection
-- Create data quality scorecard
+- Create data quality dashboard
 
 **Documentation**
 - Add more code examples
