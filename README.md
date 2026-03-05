@@ -1,420 +1,375 @@
 <div align="center">
 
-# 🌤️ Weather Data Pipeline
+# Weather Data Pipeline
 
-### *Production-Ready ETL System with Modern Data Engineering*
+*A production-ready ETL system demonstrating enterprise-grade data engineering practices*
 
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![PostgreSQL](https://img.shields.io/badge/postgresql-15-336791.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Polars](https://img.shields.io/badge/polars-0.20+-CD792C.svg?style=for-the-badge&logo=polars&logoColor=white)](https://pola.rs/)
-[![Streamlit](https://img.shields.io/badge/streamlit-1.35+-FF4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Docker](https://img.shields.io/badge/docker-compose-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PostgreSQL](https://img.shields.io/badge/postgresql-15-336791.svg)](https://www.postgresql.org/)
+[![Polars](https://img.shields.io/badge/polars-0.20+-CD792C.svg)](https://pola.rs/)
+[![Streamlit](https://img.shields.io/badge/streamlit-1.35+-FF4B4B.svg)](https://streamlit.io/)
+[![Docker](https://img.shields.io/badge/docker-compose-2496ED.svg)](https://docs.docker.com/compose/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**A production-ready ETL pipeline showcasing enterprise-grade data engineering**  
-Extract weather data → Transform with Polars → Load to PostgreSQL → Visualize with Streamlit
+[Overview](#overview) • [Get Started](#getting-started) • [Run the Sample](#run-the-sample) • [Documentation](#documentation) • [Performance](#performance)
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🎯 Features](#-key-features) • [📈 Performance](#-performance-highlights) • [🤝 Contributing](#-contributing)
+⭐ *If you like this project, star it on GitHub — it helps a lot!*
 
 ---
 
 </div>
 
-## 📊 Project Overview
+## Overview
 
-<table>
-<tr>
-<td width="50%">
+This sample demonstrates a complete **Extract-Transform-Load (ETL)** pipeline for weather data, showcasing modern data engineering practices suitable for production environments. You can use it as a starting point for building scalable data pipelines or as a reference implementation for learning data engineering concepts.
 
-### 🎯 What It Does
+The pipeline extracts real-time weather data from the Open-Meteo API, transforms it using high-performance Polars DataFrames, loads it into PostgreSQL with ACID guarantees, and provides an interactive Streamlit dashboard for visualization.
 
-A complete **ETL pipeline** that:
-- 🌍 Extracts real-time weather data from **Open-Meteo API**
-- ⚡ Transforms data using **Polars** (5-10x faster than pandas)
-- 💾 Loads into **PostgreSQL** with ACID guarantees
-- 📊 Visualizes through **interactive Streamlit dashboard**
+### What You'll Learn
 
-### 💡 Why It Matters
+- **ETL Architecture**: How to design robust extract-transform-load pipelines
+- **Performance Optimization**: Using Polars for 5-10x faster data processing
+- **Data Reliability**: Implementing retry logic, validation, and idempotent operations
+- **Security Best Practices**: Preventing SQL injection and managing credentials securely
+- **Modern Python**: Type hints, connection pooling, and containerization with Docker
 
-Demonstrates **production-grade skills**:
-- ✅ **Data Engineering** - ETL patterns, validation, idempotency
-- ✅ **Performance** - 56x improvement potential (80% faster)
-- ✅ **Security** - SQL injection prevention, parameterized queries
-- ✅ **Reliability** - Self-healing, retry logic with exponential backoff
-- ✅ **Modern Stack** - Python 3.11+, type hints, Docker
-
-</td>
-<td width="50%">
-
-### 📈 Scale & Impact
-
-<div align="center">
-
-**Current Scale**
-```
-5 cities
-840 records/run
-~7.3M rows/year
-```
-
-**Proven Scalability**
-```
-100+ cities supported
-147M rows/year capacity
-56x performance improvement
-```
-
-</div>
-
-### 🏆 Quality Metrics
-
-<div align="center">
-
-| Metric | Status |
-|--------|--------|
-| **Security** | 🟢 Excellent |
-| **Reliability** | 🟢 Excellent |
-| **Data Quality** | 🟢 Excellent |
-| **Performance** | 🟡 Good |
-| **Overall** | 🟢 Production-Ready |
-
-</div>
-
-</td>
-</tr>
-</table>
-
-## ✨ Key Features
-
-<table>
-<tr>
-<td width="33%" align="center">
-
-### ⚡ High Performance
-
-**Polars DataFrames**  
-5-10x faster than pandas
-
-**Connection Pooling**  
-1-10 concurrent connections
-
-**Smart Caching**  
-5-minute query cache
-
-**80% Faster**  
-With parallelization
-
-</td>
-<td width="33%" align="center">
-
-### 🔒 Security First
-
-**SQL Injection Prevention**  
-Parameterized queries only
-
-**Credential Management**  
-Environment variables
-
-**Input Validation**  
-7 comprehensive rules
-
-**Production-Ready**  
-Enterprise-grade
-
-</td>
-<td width="33%" align="center">
-
-### 🔄 Reliability
-
-**Retry Logic**  
-3 attempts, exponential backoff
-
-**Self-Healing**  
-95% automatic recovery
-
-**Idempotent Operations**  
-Safe to re-run anytime
-
-**Enterprise-Grade**  
-Battle-tested reliability
-
-</td>
-</tr>
-</table>
-
-### 🎨 Interactive Dashboard
-
-<div align="center">
-
-| Feature | Description |
-|---------|-------------|
-| 📊 **3 Pages** | Current Conditions • Historical Trends • City Comparison |
-| 🎨 **Rich Visualizations** | Line charts, bar charts, area charts with Plotly |
-| 🔍 **Smart Filters** | Multi-city select, date ranges, temperature units |
-| ⚡ **Performance** | Sub-second queries with 5-minute caching |
-
-</div>
-
-### 🛠️ Engineering Excellence
-
-<div align="center">
-
-```mermaid
-graph LR
-    A[🧪 Type Safety] --> B[100% type hints]
-    C[🐳 Containerized] --> D[Docker Compose]
-    E[🔧 Modern Tools] --> F[uv, Polars, SQLAlchemy]
-    G[📊 Observability] --> H[Logging + Stats]
-```
-
-</div>
-
-## 🏗️ Architecture
-
-<div align="center">
+### Architecture
 
 ```
-╔═══════════════════════════════════════════════════════════════════════════╗
-║                        🌤️  WEATHER DATA PIPELINE                          ║
-╚═══════════════════════════════════════════════════════════════════════════╝
+┌─────────────────────────────────────────────────────────────────────┐
+│                      Weather Data Pipeline                          │
+└─────────────────────────────────────────────────────────────────────┘
 
-    ┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
-    │   📡 EXTRACT    │         │  ⚡ TRANSFORM   │         │   💾 LOAD       │
-    │                 │         │                 │         │                 │
-    │  Open-Meteo API │────────▶│  Polars Engine  │────────▶│  PostgreSQL 15  │
-    │  + Retry Logic  │  JSON   │  + Validation   │  Batch  │  + Pooling      │
-    │  + Rate Limit   │         │  + Type Safety  │         │  + Idempotency  │
-    └─────────────────┘         └─────────────────┘         └────────┬────────┘
-                                                                      │
-                                                                      │ Query
-                                                                      │
-                                                            ┌─────────▼────────┐
-                                                            │  📊 VISUALIZE    │
-                                                            │                  │
-                                                            │ Streamlit App    │
-                                                            │ + Plotly Charts  │
-                                                            │ + Smart Caching  │
-                                                            └──────────────────┘
+  EXTRACT              TRANSFORM              LOAD              VISUALIZE
+     │                     │                    │                    │
+┌────▼─────┐         ┌────▼─────┐        ┌────▼─────┐        ┌─────▼────┐
+│ Open-    │  JSON   │  Polars  │ Batch  │ Postgre- │ Query  │ Stream-  │
+│ Meteo    ├────────►│  Engine  ├───────►│ SQL 15   ├───────►│ lit      │
+│ API      │         │          │        │          │        │ Dashboard│
+└──────────┘         └──────────┘        └──────────┘        └──────────┘
+• Retry logic        • Validation         • Pooling           • Plotly charts
+• Rate limiting      • Type safety        • Idempotency       • Smart caching
+                                          • ACID guarantees   • Real-time data
 ```
 
-</div>
+### Features
 
-### 🔧 Tech Stack Deep-Dive
+- **High Performance**: Polars DataFrames process data 5-10x faster than pandas with optimized memory usage
+- **Reliable**: Automatic retry logic with exponential backoff handles transient failures gracefully
+- **Secure**: Parameterized queries prevent SQL injection; environment-based credential management
+- **Scalable**: Connection pooling and batch processing support scaling from 5 to 100+ cities
+- **Observable**: Comprehensive logging and statistics tracking for monitoring and debugging
+- **Interactive Dashboard**: Three-page Streamlit application with filtering, date ranges, and rich visualizations
 
-<table>
-<tr>
-<td width="50%">
+## Getting Started
 
-#### Core Technologies
+You have multiple options to get started with this project:
 
-| Component | Technology | Why? |
-|-----------|-----------|------|
-| 🐍 **Language** | Python 3.11+ | Type hints, performance, ecosystem |
-| ⚡ **Data Processing** | Polars | 5-10x faster than pandas, memory efficient |
-| 💾 **Database** | PostgreSQL 15 | ACID guarantees, time-series support |
-| 📊 **Visualization** | Streamlit | Rapid development, interactive widgets |
-| 🐳 **Deployment** | Docker Compose | Consistent environments, easy setup |
+### Use Local Environment
 
-</td>
-<td width="50%">
+**Prerequisites**
+- Python 3.11 or later
+- Docker and Docker Compose
+- Git
 
-#### Key Libraries
+**Setup**
 
-| Library | Purpose | Benefit |
-|---------|---------|---------|
-| `requests` | HTTP client | Industry standard, robust |
-| `psycopg2` | DB driver | Connection pooling, battle-tested |
-| `SQLAlchemy` | SQL toolkit | Parameterized queries, SQL injection safe |
-| `plotly` | Charts | Interactive, beautiful visualizations |
-| `uv` | Package manager | 10-100x faster than pip |
-
-</td>
-</tr>
-</table>
-
-### 🎯 Design Decisions
-
-<div align="center">
-
-| Decision | Rationale | Impact |
-|----------|-----------|--------|
-| **Polars over pandas** | 5-10x performance, better memory | ⚡ 80% faster pipeline |
-| **Connection pooling** | Reuse DB connections, avoid overhead | 🔄 95% self-healing |
-| **Parameterized queries** | Prevent SQL injection attacks | 🔒 Enterprise security |
-| **Retry with backoff** | Handle transient failures gracefully | 🛡️ High reliability |
-| **Idempotent inserts** | Safe re-runs, no duplicates | ✅ Production-ready |
-
-</div>
-
-## 🚀 Quick Start
-
-### **Prerequisites**
-
-- Python 3.11+
-- Docker & Docker Compose
-- 5 minutes of setup time
-
-### **1. Clone & Setup**
+1. Clone the repository:
 
 ```bash
-# Clone repository
 git clone https://github.com/YOUR_USERNAME/weather-data-pipeline.git
 cd weather-data-pipeline
+```
 
-# Install dependencies (using uv - 10-100x faster than pip)
+2. Install dependencies:
+
+> [!TIP]
+> We recommend using [uv](https://astral.sh/uv) for 10-100x faster dependency installation
+
+```bash
+# With uv (recommended)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 
 # Or with pip
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e .
 ```
 
-### **2. Configure Environment**
+3. Configure environment:
 
 ```bash
-# Copy environment template
 cp .env.example .env
-
-# Edit with your credentials (uses sensible defaults)
-nano .env
+# Edit .env with your settings (defaults work for local development)
 ```
 
-### **3. Start Database**
+4. Start the database:
 
 ```bash
-# Start PostgreSQL + pgAdmin
 docker-compose up -d
-
-# Verify containers running
-docker ps
 ```
 
-### **4. Run Pipeline**
+> [!NOTE]
+> This starts PostgreSQL on port 5432 and pgAdmin on port 5050. Default credentials are in `.env.example`.
+
+## Run the Sample
+
+### Run Locally
+
+1. **Execute the ETL pipeline**:
 
 ```bash
-# Execute ETL pipeline
 uv run python src/pipeline.py
-
-# Expected output: ✅ Pipeline complete: ~840 rows inserted, 5 cities processed
-# Duration: ~27 seconds
 ```
 
-### **5. Launch Dashboard**
+Expected output:
+```
+INFO: Starting weather data pipeline
+INFO: Extracting data for 5 cities
+INFO: Transforming 840 weather records
+INFO: Loading data to PostgreSQL
+✅ Pipeline complete: 840 rows inserted in 27.3 seconds
+```
+
+2. **Launch the dashboard**:
 
 ```bash
-# Start Streamlit dashboard
 uv run streamlit run dashboard/app.py
-
-# Open browser to http://localhost:8501
 ```
 
-**🎉 Done!** You now have a complete weather data platform running locally.
+Open your browser to `http://localhost:8501`
 
----
+### Use as a Module
 
-## 📈 Performance Highlights
-
-### **Current Performance (5 Cities)**
-
-| Metric           | Value         | Status            |
-| ---------------- | ------------- | ----------------- |
-| Pipeline Runtime | 27s           | ✅ < 30s target   |
-| Database Insert  | 5s (840 rows) | ✅ < 5s target    |
-| Dashboard Load   | 1.8s          | ✅ < 2s target    |
-| Query Response   | 300ms         | ✅ < 500ms target |
-
-### **Optimization Potential**
-
-| Scale          | Current | Optimized | Improvement          |
-| -------------- | ------- | --------- | -------------------- |
-| **5 cities**   | 27s     | 5.5s      | **80% faster**       |
-| **10 cities**  | 54s     | 6.2s      | **88% faster**       |
-| **50 cities**  | 4m30s   | 12s       | **96% faster**       |
-| **100 cities** | 8m40s   | 9.5s      | **98% faster (56x)** |
-
-**Quick Win Optimizations** (5 hours implementation):
-
-- Parallel API extraction: 80% faster
-- Add LIMIT clauses: Prevent browser crashes at scale
-- Vectorize load phase: 85% faster inserts
-
-See [docs/PERFORMANCE.md](docs/PERFORMANCE.md) for detailed analysis.
-
-## 📚 Documentation
-
-- **[Setup Guide](docs/SETUP.md)** - Complete installation and configuration
-- **[Architecture](docs/ARCHITECTURE.md)** - Technical deep-dive and design decisions
-- **[Performance](docs/PERFORMANCE.md)** - Optimization analysis and benchmarks
-- **[API Reference](docs/API.md)** - Developer guide and extension points
-- **[Contributing](CONTRIBUTING.md)** - Contribution guidelines
-
----
-
-## 🎯 Use as Module
+You can integrate the pipeline into your own Python applications:
 
 ```python
 from src.pipeline import run_pipeline
 from src.extract import City
 
-# Run with default cities
+# Run with default cities (Cairo, London, Tokyo, New York, Sydney)
 stats = run_pipeline()
-print(f"✅ Inserted {stats['inserted']} rows")
+print(f"Inserted {stats['inserted']} rows in {stats['duration_seconds']:.1f}s")
 
 # Run with custom cities
 custom_cities = [
     City("Paris", 48.8566, 2.3522),
     City("Berlin", 52.5200, 13.4050),
+    City("Mumbai", 19.0760, 72.8777),
 ]
 stats = run_pipeline(cities=custom_cities)
 
 # Access detailed statistics
-print(f"Duration: {stats['duration_seconds']:.1f}s")
+print(f"Valid records: {stats['valid_records']}")
 print(f"Filtered (invalid): {stats['filtered_invalid']}")
 ```
 
-## 🤝 Contributing
+### Dashboard Features
 
-Contributions welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+The Streamlit dashboard provides three interactive pages:
 
-**Areas for Contribution:**
+| Page | Description |
+|------|-------------|
+| **Current Conditions** | Real-time weather overview with temperature, humidity, wind, and precipitation metrics |
+| **Historical Trends** | Time-series visualizations showing weather patterns over custom date ranges |
+| **City Comparison** | Side-by-side comparison of weather metrics across multiple cities |
 
-- Test coverage improvements
-- Performance optimizations
-- Additional data sources
-- Dashboard enhancements
-- Documentation improvements
+**Interactive Controls**:
+- Multi-city selection filter
+- Date range picker for historical analysis
+- Temperature unit toggle (°C / °F)
+- Automatic data refresh with 5-minute caching
 
----
+## Performance
 
-## 👤 About
+### Current Metrics (5 Cities)
 
-Built by a data engineer passionate about production-ready systems. This project demonstrates:
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| Pipeline Runtime | 27s | < 30s | ✅ Met |
+| Database Insert | 5s (840 rows) | < 5s | ✅ Met |
+| Dashboard Load | 1.8s | < 2s | ✅ Met |
+| Query Response | 300ms | < 500ms | ✅ Met |
 
-- Modern Python development practices
-- Data engineering at scale
-- Performance optimization
-- Security-first approach
-- Clean, maintainable code
+### Optimization Potential
 
-**LinkedIn**: [https://www.linkedin.com/in/eslam-mohamed-116152335/]  
+The pipeline can be significantly optimized with parallel processing:
+
+| Cities | Current | Optimized | Improvement |
+|--------|---------|-----------|-------------|
+| 5 | 27s | 5.5s | 80% faster |
+| 10 | 54s | 6.2s | 88% faster |
+| 50 | 4m 30s | 12s | 96% faster |
+| 100 | 8m 40s | 9.5s | **98% faster (56x)** |
+
+> [!IMPORTANT]
+> These optimizations are well-documented in [PERFORMANCE.md](docs/PERFORMANCE.md) and can be implemented in approximately 5 hours of development work.
+
+**Quick Wins**:
+- Parallel API extraction using `asyncio` or `multiprocessing`
+- Vectorized batch inserts with `executemany()`
+- Query pagination with `LIMIT` clauses for dashboard
+
+See [docs/PERFORMANCE.md](docs/PERFORMANCE.md) for detailed analysis and implementation guide.
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[Setup Guide](docs/SETUP.md)** - Detailed installation, configuration, and troubleshooting
+- **[Architecture](docs/ARCHITECTURE.md)** - System design, data flow, and technical decisions
+- **[Performance](docs/PERFORMANCE.md)** - Benchmarks, bottleneck analysis, and optimization strategies
+- **[API Reference](docs/API.md)** - Developer guide for extending and customizing the pipeline
+
+## Tech Stack
+
+### Core Technologies
+
+| Component | Choice | Why |
+|-----------|--------|-----|
+| **Language** | Python 3.11+ | Modern type hints, performance improvements, rich ecosystem |
+| **Data Processing** | Polars 0.20+ | 5-10x faster than pandas, memory-efficient, Rust-powered |
+| **Database** | PostgreSQL 15 | ACID guarantees, excellent time-series support, production-ready |
+| **Visualization** | Streamlit 1.35+ | Rapid development, reactive programming, beautiful UI |
+| **Containerization** | Docker Compose | Consistent environments, easy deployment, service orchestration |
+
+### Key Design Decisions
+
+**Why Polars over pandas?**
+- 5-10x performance improvement for data transformations
+- Better memory efficiency with Apache Arrow format
+- Lazy evaluation for optimized query plans
+- Modern API with method chaining
+
+**Why PostgreSQL?**
+- ACID compliance ensures data integrity
+- Excellent support for time-series queries
+- Rich indexing capabilities for performance
+- Battle-tested reliability at scale
+
+**Why connection pooling?**
+- Reduces connection overhead (95% self-healing capability)
+- Enables concurrent operations
+- Improves resource utilization
+- Essential for production workloads
+
+**Why idempotent inserts?**
+- Safe to re-run pipeline after failures
+- No duplicate data from retries
+- Simplifies operational procedures
+- Production-ready reliability
+
+## Security & Reliability
+
+### Security Features
+
+- **SQL Injection Prevention**: All database queries use parameterized statements via SQLAlchemy
+- **Credential Management**: Environment variables for sensitive data; no hardcoded secrets
+- **Input Validation**: Seven comprehensive validation rules filter invalid weather data
+- **Dependency Security**: Regular updates via `uv sync` to patch vulnerabilities
+
+### Reliability Features
+
+- **Retry Logic**: Three attempts with exponential backoff for transient failures
+- **Self-Healing**: 95% automatic recovery from common issues (network, rate limits, timeouts)
+- **Idempotent Operations**: `ON CONFLICT DO NOTHING` ensures safe reruns
+- **Connection Pooling**: 1-10 concurrent connections with automatic recovery
+- **Comprehensive Logging**: Detailed logs for debugging and monitoring
+
+> [!NOTE]
+> These patterns are production-ready and have been tested across various failure scenarios.
+
+## Project Statistics
+
+```
+Total Lines of Code: ~1,500
+Test Coverage: Core ETL functions
+Documentation: 4 comprehensive guides
+External API Calls: Open-Meteo (free, no auth)
+Database Writes: ~840 rows/run (5 cities)
+Annual Data Volume: ~7.3M rows/year
+Scalability: Supports 100+ cities
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Database connection failed**
+```bash
+# Ensure PostgreSQL container is running
+docker-compose ps
+
+# Check logs for errors
+docker-compose logs postgres
+
+# Verify credentials in .env match docker-compose.yml
+```
+
+**Pipeline fails with API errors**
+```bash
+# Check internet connectivity
+curl -I https://api.open-meteo.com
+
+# Retry logic handles transient failures (3 attempts)
+# If persistent, check API status at https://open-meteo.com
+```
+
+**Dashboard shows no data**
+```bash
+# Ensure pipeline has run at least once
+uv run python src/pipeline.py
+
+# Check database has data
+docker-compose exec postgres psql -U weather_user -d weather_db -c "SELECT COUNT(*) FROM weather_readings;"
+```
+
+See [docs/SETUP.md](docs/SETUP.md) for more troubleshooting guidance.
+
+## Contributing
+
+Contributions are welcome! This project follows standard open-source contribution practices.
+
+**Areas for Contribution**:
+- Test coverage expansion (unit tests, integration tests)
+- Performance optimizations (async extraction, vectorized loads)
+- Additional data sources (weather services, air quality APIs)
+- Dashboard enhancements (new visualizations, export features)
+- Documentation improvements (tutorials, architecture diagrams)
+
+Please ensure:
+- Code follows existing style and patterns
+- Type hints are used for all functions
+- Documentation is updated for significant changes
+- Commit messages are clear and descriptive
+
+## About
+
+This project was built to demonstrate modern data engineering practices and production-ready Python development. It showcases:
+
+- **Data Engineering Fundamentals**: ETL design patterns and best practices
+- **Performance Engineering**: Optimization strategies and benchmarking
+- **Software Craftsmanship**: Type safety, error handling, clean code
+- **DevOps Practices**: Containerization, environment management, observability
+
+**Built by**: Eslam Mohamed  
+**LinkedIn**: [https://www.linkedin.com/in/eslam-mohamed-116152335/](https://www.linkedin.com/in/eslam-mohamed-116152335/)  
 **GitHub**: [@EslamMohamed365](https://github.com/EslamMohamed365)
 
----
+## Acknowledgments
 
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Open-Meteo API** - Free weather data without authentication
-- **Polars Team** - High-performance DataFrame library
-- **Streamlit** - Rapid dashboard development
-- **PostgreSQL** - Rock-solid database foundation
+- **[Open-Meteo](https://open-meteo.com/)** - Free weather API with no authentication required
+- **[Polars](https://pola.rs/)** - High-performance DataFrame library
+- **[Streamlit](https://streamlit.io/)** - Rapid dashboard development framework
+- **[PostgreSQL](https://www.postgresql.org/)** - Robust and reliable database foundation
 
 ---
 
-**⭐ Star this repo if you find it useful!**
+<div align="center">
+
+**⭐ If you find this project useful, please star it on GitHub!**
+
+[Report Bug](https://github.com/YOUR_USERNAME/weather-data-pipeline/issues) • [Request Feature](https://github.com/YOUR_USERNAME/weather-data-pipeline/issues) • [Documentation](docs/)
+
+</div>
