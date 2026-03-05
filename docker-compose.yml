@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  # =====================================================
+  # PostgreSQL 15 Database
+  # =====================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: weather_pipeline_db
+    restart: unless-stopped
+
+    environment:
+      # Database credentials from .env file
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      # Performance tuning for time-series workloads
+      # Increase shared buffers for better caching of frequently accessed data
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_WORK_MEM: 16MB
+
+      # Enable query logging for development (disable in production)
+      POSTGRES_LOG_STATEMENT: all
+      POSTGRES_LOG_DURATION: on
+
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+    volumes:
+      # Named volume for data persistence (survives container restarts)
+      - postgres_data:/var/lib/postgresql/data
+
+      # Auto-execute schema.sql on first container start
+      # Files in /docker-entrypoint-initdb.d/ run alphabetically if DB is empty
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - weather_pipeline_network
+
+  # =====================================================
+  # pgAdmin 4 - Database Administration UI
+  # =====================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: weather_pipeline_pgadmin
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False" # Desktop mode (no login required)
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+
+    ports:
+      - "5050:80"
+
+    volumes:
+      # Persist pgAdmin configuration and saved connections
+      - pgadmin_data:/var/lib/pgadmin
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - weather_pipeline_network
+
+# =====================================================
+# Named Volumes
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local
+    name: weather_pipeline_postgres_data
+
+  pgadmin_data:
+    driver: local
+    name: weather_pipeline_pgadmin_data
+
+# =====================================================
+# Custom Network
+# =====================================================
+networks:
+  weather_pipeline_network:
+    driver: bridge
+    name: weather_pipeline_network
