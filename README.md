@@ -29,6 +29,7 @@ This pipeline showcases enterprise-grade data engineering skills suitable for pr
 ## ✨ Key Features
 
 ### **Production-Grade ETL Pipeline**
+
 - ⚡ **High Performance**: Polars DataFrames (5-10x faster than pandas), connection pooling
 - 🔒 **Security First**: Parameterized queries, no SQL injection, credential management
 - 🔄 **Reliability**: 3-retry exponential backoff, connection pooling (1-10 connections), 95% self-healing
@@ -36,12 +37,14 @@ This pipeline showcases enterprise-grade data engineering skills suitable for pr
 - 🔁 **Idempotent**: Safe re-runs with `ON CONFLICT DO NOTHING` operations
 
 ### **Interactive Dashboard**
+
 - 📈 **3 Pages**: Current conditions, historical trends, city comparison
 - 🎨 **Rich Visualizations**: Line charts, bar charts, area charts with Plotly
 - 🔍 **Smart Filters**: Multi-city select, date ranges, temperature unit toggle
 - ⚡ **Performance**: 5-minute query caching, indexed database queries
 
 ### **Engineering Excellence**
+
 - 🧪 **Type Safety**: 100% type hints coverage with mypy validation
 - 🐳 **Containerized**: Docker Compose for PostgreSQL + pgAdmin
 - 🔧 **Modern Tooling**: `uv` package manager, Polars, SQLAlchemy
@@ -75,25 +78,27 @@ This pipeline showcases enterprise-grade data engineering skills suitable for pr
 
 **Tech Stack:**
 
-| Component | Technology | Why This Choice |
-|-----------|-----------|----------------|
-| **Data Processing** | Polars | 5-10x faster than pandas, better memory efficiency |
-| **Database** | PostgreSQL 15 | ACID guarantees, mature time-series support |
-| **API Client** | requests + retry | Industry standard, robust error handling |
-| **Dashboard** | Streamlit | Rapid development, interactive widgets |
-| **Orchestration** | Python pipeline.py | Flexible, testable, easy to extend |
-| **Deployment** | Docker Compose | Consistent environments, easy local development |
+| Component           | Technology         | Why This Choice                                    |
+| ------------------- | ------------------ | -------------------------------------------------- |
+| **Data Processing** | Polars             | 5-10x faster than pandas, better memory efficiency |
+| **Database**        | PostgreSQL 15      | ACID guarantees, mature time-series support        |
+| **API Client**      | requests + retry   | Industry standard, robust error handling           |
+| **Dashboard**       | Streamlit          | Rapid development, interactive widgets             |
+| **Orchestration**   | Python pipeline.py | Flexible, testable, easy to extend                 |
+| **Deployment**      | Docker Compose     | Consistent environments, easy local development    |
 
 ---
 
 ## 🚀 Quick Start
 
 ### **Prerequisites**
+
 - Python 3.11+
 - Docker & Docker Compose
 - 5 minutes of setup time
 
 ### **1. Clone & Setup**
+
 ```bash
 # Clone repository
 git clone https://github.com/YOUR_USERNAME/weather-data-pipeline.git
@@ -109,6 +114,7 @@ pip install -e .
 ```
 
 ### **2. Configure Environment**
+
 ```bash
 # Copy environment template
 cp .env.example .env
@@ -118,6 +124,7 @@ nano .env
 ```
 
 ### **3. Start Database**
+
 ```bash
 # Start PostgreSQL + pgAdmin
 docker-compose up -d
@@ -127,6 +134,7 @@ docker ps
 ```
 
 ### **4. Run Pipeline**
+
 ```bash
 # Execute ETL pipeline
 uv run python src/pipeline.py
@@ -136,6 +144,7 @@ uv run python src/pipeline.py
 ```
 
 ### **5. Launch Dashboard**
+
 ```bash
 # Start Streamlit dashboard
 uv run streamlit run dashboard/app.py
@@ -151,23 +160,24 @@ uv run streamlit run dashboard/app.py
 
 ### **Current Performance (5 Cities)**
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| Pipeline Runtime | 27s | ✅ < 30s target |
-| Database Insert | 5s (840 rows) | ✅ < 5s target |
-| Dashboard Load | 1.8s | ✅ < 2s target |
-| Query Response | 300ms | ✅ < 500ms target |
+| Metric           | Value         | Status            |
+| ---------------- | ------------- | ----------------- |
+| Pipeline Runtime | 27s           | ✅ < 30s target   |
+| Database Insert  | 5s (840 rows) | ✅ < 5s target    |
+| Dashboard Load   | 1.8s          | ✅ < 2s target    |
+| Query Response   | 300ms         | ✅ < 500ms target |
 
 ### **Optimization Potential**
 
-| Scale | Current | Optimized | Improvement |
-|-------|---------|-----------|-------------|
-| **5 cities** | 27s | 5.5s | **80% faster** |
-| **10 cities** | 54s | 6.2s | **88% faster** |
-| **50 cities** | 4m30s | 12s | **96% faster** |
-| **100 cities** | 8m40s | 9.5s | **98% faster (56x)** |
+| Scale          | Current | Optimized | Improvement          |
+| -------------- | ------- | --------- | -------------------- |
+| **5 cities**   | 27s     | 5.5s      | **80% faster**       |
+| **10 cities**  | 54s     | 6.2s      | **88% faster**       |
+| **50 cities**  | 4m30s   | 12s       | **96% faster**       |
+| **100 cities** | 8m40s   | 9.5s      | **98% faster (56x)** |
 
 **Quick Win Optimizations** (5 hours implementation):
+
 - Parallel API extraction: 80% faster
 - Add LIMIT clauses: Prevent browser crashes at scale
 - Vectorize load phase: 85% faster inserts
@@ -179,18 +189,21 @@ See [docs/PERFORMANCE.md](docs/PERFORMANCE.md) for detailed analysis.
 ## 🔐 Security & Reliability
 
 ### **Security (9/10)**
+
 - ✅ SQL injection prevention via parameterized queries
 - ✅ Credential management through environment variables
 - ✅ Input validation with 7 comprehensive rules
 - ✅ Connection pooling prevents exhaustion attacks
 
 ### **Reliability (9/10)**
+
 - ✅ 3-retry exponential backoff on transient failures
 - ✅ Connection pooling (1-10 connections)
 - ✅ Idempotent operations (safe re-runs)
 - ✅ Partial failure handling (continues on single city failure)
 
 ### **Data Quality (7.9/10)**
+
 - ✅ Schema validation before database insert
 - ✅ 7 validation rules (temperature range, humidity bounds, etc.)
 - ✅ Timestamp freshness checks
@@ -230,33 +243,12 @@ print(f"Duration: {stats['duration_seconds']:.1f}s")
 print(f"Filtered (invalid): {stats['filtered_invalid']}")
 ```
 
----
-
-## 🗺️ Roadmap
-
-### **Phase 1: Test Coverage** (Priority)
-- [ ] Comprehensive unit tests (target: 80%+ coverage)
-- [ ] Integration tests for full pipeline
-- [ ] Error injection tests
-
-### **Phase 2: Performance** (5 hours)
-- [ ] Parallel API extraction (80% faster)
-- [ ] Vectorized load operations (85% faster inserts)
-- [ ] Query pagination and limits
-
-### **Phase 3: Enterprise Features**
-- [ ] Prometheus metrics export
-- [ ] Grafana monitoring dashboards
-- [ ] Automated backfill on gaps
-- [ ] Apache Airflow orchestration
-
----
-
 ## 🤝 Contributing
 
 Contributions welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 **Areas for Contribution:**
+
 - Test coverage improvements
 - Performance optimizations
 - Additional data sources
@@ -275,9 +267,8 @@ Built by a data engineer passionate about production-ready systems. This project
 - Security-first approach
 - Clean, maintainable code
 
-**Portfolio**: [Your Portfolio URL]  
-**LinkedIn**: [Your LinkedIn URL]  
-**GitHub**: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
+**LinkedIn**: [https://www.linkedin.com/in/eslam-mohamed-116152335/]  
+**GitHub**: [@EslamMohamed365](https://github.com/EslamMohamed365)
 
 ---
 
