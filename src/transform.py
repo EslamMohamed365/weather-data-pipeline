@@ -65,6 +65,9 @@ def transform_weather_data(
             (pl.col("temperature_c") * 9.0 / 5.0 + 32.0).alias("temperature_f")
         )
 
+        # Convert humidity to Float64 (API returns as Int64)
+        df = df.with_columns(pl.col("humidity_pct").cast(pl.Float64))
+
         # Convert wind speed from m/s to km/h: × 3.6
         df = df.with_columns(
             (pl.col("wind_speed_ms") * 3.6).alias("wind_speed_kmh")

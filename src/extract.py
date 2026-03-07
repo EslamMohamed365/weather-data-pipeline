@@ -19,15 +19,16 @@ class City:
     name: str
     latitude: float
     longitude: float
+    country_code: str = "XX"
 
 
 # Default cities configuration
 DEFAULT_CITIES = [
-    City("Cairo", 30.0444, 31.2357),
-    City("London", 51.5074, -0.1278),
-    City("Tokyo", 35.6762, 139.6503),
-    City("New York", 40.7128, -74.0060),
-    City("Sydney", -33.8688, 151.2093),
+    City("Cairo", 30.0444, 31.2357, "EG"),
+    City("London", 51.5074, -0.1278, "GB"),
+    City("Tokyo", 35.6762, 139.6503, "JP"),
+    City("New York", 40.7128, -74.0060, "US"),
+    City("Sydney", -33.8688, 151.2093, "AU"),
 ]
 
 # Open-Meteo API configuration

@@ -119,6 +119,7 @@ New data displayed
 ## Component Responsibilities
 
 ### `app.py` (UI Layer)
+
 - Renders pages and components
 - Handles user interactions
 - Manages global state (filters)
@@ -126,6 +127,7 @@ New data displayed
 - Error handling and loading states
 
 **Key Functions**:
+
 - `render_sidebar()` - Global filter controls
 - `render_current_conditions()` - Page 1
 - `render_historical_trends()` - Page 2
@@ -134,12 +136,14 @@ New data displayed
 - `get_db_connection()` - Connection management
 
 ### `queries.py` (Data Layer)
+
 - All SQL query logic
 - Database connection handling
 - Result caching
 - Polars DataFrame conversion
 
 **Query Functions** (all cached 5 min):
+
 - `get_available_cities()` - City list
 - `get_latest_readings()` - Current conditions
 - `get_temperature_trend()` - Time-series data
@@ -152,6 +156,7 @@ New data displayed
 ## Caching Strategy
 
 ### Connection Cache (`@st.cache_resource`)
+
 ```python
 @st.cache_resource
 def get_db_connection() -> Connection:
@@ -163,6 +168,7 @@ def get_db_connection() -> Connection:
 **Why?** Avoid reconnection overhead on every query.
 
 ### Query Cache (`@st.cache_data(ttl=300)`)
+
 ```python
 @st.cache_data(ttl=300)
 def get_temperature_trend(_conn, cities, start, end):
@@ -176,17 +182,20 @@ def get_temperature_trend(_conn, cities, start, end):
 ## Query Optimization
 
 ### Index Usage
+
 - `idx_readings_location_time` - Location + time queries
 - `idx_readings_time` - Time-range scans
 - `idx_locations_coordinates` - Geospatial (future)
 
 ### Query Patterns
+
 - **Latest readings**: `MAX(recorded_at)` with window function
 - **Time-series**: `BETWEEN :start AND :end` on indexed column
 - **Aggregations**: `GROUP BY DATE(recorded_at)` for daily data
 - **Multi-city**: `city_name = ANY(:cities)` for efficient filtering
 
 ### Performance Tips
+
 - Date filtering at SQL level (not Python)
 - Use composite indexes (location + time)
 - Limit result sets with date ranges
@@ -195,6 +204,7 @@ def get_temperature_trend(_conn, cities, start, end):
 ## UI Components
 
 ### Sidebar (Always Visible)
+
 ```
 ┌─────────────────────┐
 │ 🌤️ Weather Dashboard│
@@ -219,6 +229,7 @@ def get_temperature_trend(_conn, cities, start, end):
 ```
 
 ### Page 1: Current Conditions
+
 ```
 ┌───────────────────────────────────────────────┐
 │ ☀️ Current Weather Conditions                 │
@@ -234,6 +245,7 @@ def get_temperature_trend(_conn, cities, start, end):
 ```
 
 ### Page 2: Historical Trends
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ 📈 Historical Trends                             │
@@ -260,6 +272,7 @@ def get_temperature_trend(_conn, cities, start, end):
 ```
 
 ### Page 3: City Comparison
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ 🌍 City Comparison                               │
@@ -314,6 +327,7 @@ Render visualizations
 ## State Management
 
 Streamlit manages state automatically:
+
 - Sidebar selections persist across page changes
 - Cache keys include all parameters (automatic)
 - Session state available for custom needs
@@ -321,11 +335,13 @@ Streamlit manages state automatically:
 ## Deployment Considerations
 
 ### Local Development
+
 ```bash
 uv run streamlit run dashboard/app.py
 ```
 
 ### Production (Docker)
+
 ```dockerfile
 FROM python:3.11-slim
 WORKDIR /app
@@ -335,6 +351,7 @@ CMD ["streamlit", "run", "dashboard/app.py", "--server.port=8501"]
 ```
 
 ### Environment Variables
+
 ```env
 DB_HOST=postgres_container
 DB_PORT=5432
@@ -354,6 +371,7 @@ DB_PASSWORD=secure_password
 ## Monitoring
 
 Track these metrics:
+
 - **Query execution time** (log slow queries)
 - **Cache hit rate** (should be >80% after warmup)
 - **Concurrent users** (Streamlit handles well up to ~100)

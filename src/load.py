@@ -110,13 +110,13 @@ def retry_on_db_error(max_retries: int = 3, backoff: float = 2.0) -> Callable[[F
 def validate_weather_data(df: pl.DataFrame) -> tuple[pl.DataFrame, list[str]]:
     """
     Validate weather data ranges before insertion.
-    
+
     Args:
         df: Polars DataFrame with weather data to validate
-    
+
     Returns:
         Tuple of (validated_df, list_of_warnings)
-        
+
     Note:
         - Filters out rows with invalid values (except humidity which is clamped)
         - Null values are allowed for optional fields
@@ -124,89 +124,97 @@ def validate_weather_data(df: pl.DataFrame) -> tuple[pl.DataFrame, list[str]]:
     """
     warnings = []
     original_count = df.height
-    
+
     # 1. TIMESTAMP VALIDATION (not too old or future)
-    now = datetime.now(timezone.utc)
-    cutoff_past = now - timedelta(days=8)  # API provides 7 days
-    cutoff_future = now + timedelta(hours=1)  # Allow 1h clock skew
-    
-    df_valid = df.filter(
-        (pl.col("recorded_at") >= cutoff_past) &
-        (pl.col("recorded_at") <= cutoff_future)
+    # The DataFrame has timezone-aware UTC datetimes, so compare with UTC now
+    now_utc = datetime.now(timezone.utc)
+    cutoff_past = now_utc - timedelta(days=8)  # API provides 7 days
+    cutoff_future = now_utc + timedelta(hours=1)  # Allow 1h clock skew
+
+    # Convert cutoff times to UTC for comparison (strip timezone info for comparison)
+    cutoff_past_naive = cutoff_past.replace(tzinfo=None)
+    cutoff_future_naive = cutoff_future.replace(tzinfo=None)
+
+    # The recorded_at column is timezone-aware (UTC), so we need to compare properly
+    # Convert to UTC and strip timezone for comparison
+    df_valid = df.with_columns(
+        [pl.col("recorded_at").dt.replace_time_zone(None).alias("recorded_at")]
+    ).filter(
+        (pl.col("recorded_at") >= cutoff_past_naive)
+        & (pl.col("recorded_at") <= cutoff_future_naive)
     )
-    
+
     timestamp_filtered = original_count - df_valid.height
     if timestamp_filtered > 0:
         warnings.append(
             f"Filtered {timestamp_filtered} rows with invalid timestamps "
             f"(must be between {cutoff_past} and {cutoff_future})"
         )
-    
+
     # 2. TEMPERATURE VALIDATION (-100°C to 60°C)
     temp_before = df_valid.height
     df_valid = df_valid.filter(
-        (pl.col("temperature_c").is_null()) |
-        ((pl.col("temperature_c") >= -100) & (pl.col("temperature_c") <= 60))
+        (pl.col("temperature_c").is_null())
+        | ((pl.col("temperature_c") >= -100) & (pl.col("temperature_c") <= 60))
     )
     temp_filtered = temp_before - df_valid.height
     if temp_filtered > 0:
         warnings.append(f"Filtered {temp_filtered} rows with invalid temperature")
-    
+
     # 3. HUMIDITY VALIDATION (0-100%, clamp values)
     df_valid = df_valid.with_columns(
         pl.when(pl.col("humidity_pct").is_null())
-          .then(None)
-          .when(pl.col("humidity_pct") < 0)
-          .then(0.0)
-          .when(pl.col("humidity_pct") > 100)
-          .then(100.0)
-          .otherwise(pl.col("humidity_pct"))
-          .alias("humidity_pct")
+        .then(None)
+        .when(pl.col("humidity_pct") < 0)
+        .then(0.0)
+        .when(pl.col("humidity_pct") > 100)
+        .then(100.0)
+        .otherwise(pl.col("humidity_pct"))
+        .alias("humidity_pct")
     )
-    
+
     # 4. WIND SPEED VALIDATION (0-400 km/h max recorded wind)
     wind_before = df_valid.height
     df_valid = df_valid.filter(
-        (pl.col("wind_speed_kmh").is_null()) |
-        ((pl.col("wind_speed_kmh") >= 0) & (pl.col("wind_speed_kmh") <= 400))
+        (pl.col("wind_speed_kmh").is_null())
+        | ((pl.col("wind_speed_kmh") >= 0) & (pl.col("wind_speed_kmh") <= 400))
     )
     wind_filtered = wind_before - df_valid.height
     if wind_filtered > 0:
         warnings.append(f"Filtered {wind_filtered} rows with invalid wind speed")
-    
+
     # 5. PRECIPITATION VALIDATION (0-2000mm max daily precip)
     precip_before = df_valid.height
     df_valid = df_valid.filter(
-        (pl.col("precipitation_mm").is_null()) |
-        ((pl.col("precipitation_mm") >= 0) & (pl.col("precipitation_mm") <= 2000))
+        (pl.col("precipitation_mm").is_null())
+        | ((pl.col("precipitation_mm") >= 0) & (pl.col("precipitation_mm") <= 2000))
     )
     precip_filtered = precip_before - df_valid.height
     if precip_filtered > 0:
         warnings.append(f"Filtered {precip_filtered} rows with invalid precipitation")
-    
+
     # 6. WEATHER CODE VALIDATION (0-99 per WMO standard)
     code_before = df_valid.height
     df_valid = df_valid.filter(
-        (pl.col("weather_code").is_null()) |
-        ((pl.col("weather_code") >= 0) & (pl.col("weather_code") <= 99))
+        (pl.col("weather_code").is_null())
+        | ((pl.col("weather_code") >= 0) & (pl.col("weather_code") <= 99))
     )
     code_filtered = code_before - df_valid.height
     if code_filtered > 0:
         warnings.append(f"Filtered {code_filtered} rows with invalid weather code")
-    
+
     # 7. CITY NAME VALIDATION (not empty)
     df_valid = df_valid.filter(
-        pl.col("city_name").is_not_null() & 
-        (pl.col("city_name").str.lengths() > 0)
+        pl.col("city_name").is_not_null() & (pl.col("city_name") != "")
     )
-    
+
     total_filtered = original_count - df_valid.height
     if total_filtered > 0:
         warnings.append(
             f"📊 Validation Summary: {df_valid.height}/{original_count} rows passed "
-            f"({total_filtered} filtered, {100*total_filtered/original_count:.1f}%)"
+            f"({total_filtered} filtered, {100 * total_filtered / original_count:.1f}%)"
         )
-    
+
     return df_valid, warnings
 
 
@@ -263,30 +271,52 @@ def ensure_locations_exist(
     Raises:
         psycopg2.Error: If database operations fail after retries
     """
+    # Import here to avoid circular import
+    from extract import DEFAULT_CITIES
+
     city_mapping: dict[str, int] = {}
+
+    # Create lookup from DEFAULT_CITIES
+    city_info = {
+        city.name: (city.country_code, city.latitude, city.longitude)
+        for city in DEFAULT_CITIES
+    }
 
     # Insert cities with ON CONFLICT DO NOTHING
     insert_query = """
-        INSERT INTO locations (city_name, country, latitude, longitude)
+        INSERT INTO locations (city_name, country_code, latitude, longitude)
         VALUES %s
-        ON CONFLICT (city_name) DO NOTHING
+        ON CONFLICT (city_name, country_code) DO NOTHING
     """
 
-    # For simplicity, we use placeholder coordinates - in production,
-    # you'd pass actual coordinates from the extract phase
-    city_values = [(city, None, None, None) for city in cities]
+    # Build city values from DEFAULT_CITIES lookup
+    city_values = []
+    for city_name in cities:
+        if city_name in city_info:
+            country_code, lat, lon = city_info[city_name]
+            city_values.append((city_name, country_code, lat, lon))
+        else:
+            # Use generic values for unknown cities
+            logger.warning(
+                f"City {city_name} not found in DEFAULT_CITIES, using placeholder"
+            )
+            city_values.append((city_name, "XX", 0.0, 0.0))
+
+    if not city_values:
+        logger.info("No cities to insert")
+        return city_mapping
 
     try:
         execute_values(cursor, insert_query, city_values)
-        logger.info(f"Ensured {len(cities)} locations exist in database")
+        logger.info(f"Ensured {len(city_values)} locations exist in database")
 
     except psycopg2.Error as e:
         logger.error(f"Error inserting locations: {e}")
         raise
 
-    # Fetch location_id for each city
+    # Fetch location_id for each city (use 'id' not 'location_id')
     select_query = """
-        SELECT location_id, city_name
+        SELECT id, city_name
         FROM locations
         WHERE city_name = ANY(%s)
     """
@@ -322,24 +352,24 @@ def load_weather_data(df: pl.DataFrame) -> dict[str, int]:
     # Validate data before insertion
     original_count = df.height
     df_validated, validation_warnings = validate_weather_data(df)
-    
+
     for warning in validation_warnings:
         logger.warning(f"⚠️  {warning}")
-    
+
     if df_validated.height == 0:
         logger.warning("No valid rows to insert after validation")
         return {
             "inserted": 0,
             "skipped": 0,
             "errors": 0,
-            "filtered_invalid": original_count
+            "filtered_invalid": original_count,
         }
 
     stats = {
         "inserted": 0,
         "skipped": 0,
         "errors": 0,
-        "filtered_invalid": original_count - df_validated.height
+        "filtered_invalid": original_count - df_validated.height,
     }
 
     try:
